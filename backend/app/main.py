@@ -34,10 +34,26 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Assemble allowed origins
+cors_origins = list(settings.CORS_ORIGINS) if isinstance(settings.CORS_ORIGINS, list) else [settings.CORS_ORIGINS]
+if settings.ALLOWED_ORIGINS:
+    extra_origins = settings.ALLOWED_ORIGINS if isinstance(settings.ALLOWED_ORIGINS, list) else [settings.ALLOWED_ORIGINS]
+    cors_origins.extend(extra_origins)
+
+# Ensure essential domains are always permitted
+essential_origins = [
+    "http://localhost:3000",
+    "https://frontend-eight-delta-26.vercel.app",
+]
+for origin in essential_origins:
+    if origin not in cors_origins:
+        cors_origins.append(origin)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=cors_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,5 +1,5 @@
 import json
-from typing import List, Union
+from typing import List, Union, Optional
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -12,11 +12,17 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
 
     # CORS origins
-    CORS_ORIGINS: Union[List[str], str] = ["http://localhost:3000"]
+    CORS_ORIGINS: Union[List[str], str] = [
+        "http://localhost:3000",
+        "https://frontend-eight-delta-26.vercel.app",
+    ]
+    ALLOWED_ORIGINS: Optional[Union[List[str], str]] = None
 
-    @field_validator("CORS_ORIGINS", mode="before")
+    @field_validator("CORS_ORIGINS", "ALLOWED_ORIGINS", mode="before")
     @classmethod
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+    def assemble_cors_origins(cls, v: Union[str, List[str], None]) -> Union[List[str], None]:
+        if v is None:
+            return None
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
         elif isinstance(v, str):
