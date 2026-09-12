@@ -1,0 +1,29 @@
+# Git
+.git/
+.gitignore
+
+# Python cache & virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Testing
+tests/
